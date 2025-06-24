@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#000080"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="https://avatars.githubusercontent.com/xiaosiyu0603">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://avatars.githubusercontent.com/xiaosiyu0603?s=32">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://avatars.githubusercontent.com/xiaosiyu0603?s=16">
+  <link rel="mask-icon" href="https://avatars.githubusercontent.com/xiaosiyu0603" color="#000080">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.css" integrity="sha256-zM8WXtG4eUn7dKKNMTuoWZub++VnSfaOpA/8PJfvTBo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous" defer></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xiaosiyu0603.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"stackoverflow-light","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat"},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="C++ Qt工程中使用Qt语言工具实现国际化，并在编译中自动编译和附加到Qt资源文件的方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Qt语言文件的自动编译">
+<meta property="og:url" content="https://xiaosiyu0603.github.io/posts/2025/05/04/Qt%E8%AF%AD%E8%A8%80%E6%96%87%E4%BB%B6%E7%9A%84%E8%87%AA%E5%8A%A8%E7%BC%96%E8%AF%91/index.html">
+<meta property="og:site_name" content="XiaoSiyu的博客">
+<meta property="og:description" content="C++ Qt工程中使用Qt语言工具实现国际化，并在编译中自动编译和附加到Qt资源文件的方法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-05-04T11:55:38.000Z">
+<meta property="article:modified_time" content="2025-05-04T12:07:34.000Z">
+<meta property="article:author" content="Xiao Siyu">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="Qt">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://xiaosiyu0603.github.io/posts/2025/05/04/Qt%E8%AF%AD%E8%A8%80%E6%96%87%E4%BB%B6%E7%9A%84%E8%87%AA%E5%8A%A8%E7%BC%96%E8%AF%91/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xiaosiyu0603.github.io/posts/2025/05/04/Qt%E8%AF%AD%E8%A8%80%E6%96%87%E4%BB%B6%E7%9A%84%E8%87%AA%E5%8A%A8%E7%BC%96%E8%AF%91/","path":"posts/2025/05/04/Qt语言文件的自动编译/","title":"Qt语言文件的自动编译"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Qt语言文件的自动编译 | XiaoSiyu的博客</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script size="300" alpha="0.6" zIndex="-10" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.umd.js" integrity="sha256-hiUEBwFEpLF6DlB8sGXlKo4kPZ46Ui4qGpd0vrVkOm4=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/pjax.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.5.0/mermaid.min.js","integrity":"sha256-2obLuIPcceEhkE3G09G33hBdmE55ivVcZUlcKcGNHjU="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+  <script src="/js/third-party/fancybox.js" defer></script>
+
+  <script src="/js/third-party/pace.js" defer></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">XiaoSiyu的博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E7%99%BB%E8%AE%B0ts%E7%9B%AE%E6%A0%87"><span class="nav-number">1.</span> <span class="nav-text">1. 登记ts目标</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#QMake%E5%B7%A5%E7%A8%8B%E5%8A%A0%E5%85%A5ts%E6%96%87%E4%BB%B6%E4%BD%8D%E7%BD%AE%E5%92%8C%E8%87%AA%E5%8A%A8%E7%BC%96%E8%AF%91%E9%85%8D%E7%BD%AE"><span class="nav-number">1.1.</span> <span class="nav-text">QMake工程加入ts文件位置和自动编译配置</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E5%88%9B%E5%BB%BAts%E6%96%87%E4%BB%B6"><span class="nav-number">2.</span> <span class="nav-text">2. 创建ts文件</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8IDE%E5%88%9B%E5%BB%BA%EF%BC%9A"><span class="nav-number">2.1.</span> <span class="nav-text">使用IDE创建：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%88%9B%E5%BB%BA%EF%BC%9A"><span class="nav-number">2.2.</span> <span class="nav-text">使用命令行创建：</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E7%BF%BB%E8%AF%91ts%E6%96%87%E4%BB%B6%E4%B8%AD%E7%9A%84%E6%9D%A1%E7%9B%AE"><span class="nav-number">3.</span> <span class="nav-text">3. 翻译ts文件中的条目</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E7%BC%96%E8%AF%91ts%E6%96%87%E4%BB%B6"><span class="nav-number">4.</span> <span class="nav-text">4. 编译ts文件</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8IDE%E5%88%9B%E5%BB%BA%EF%BC%9A-1"><span class="nav-number">4.1.</span> <span class="nav-text">使用IDE创建：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%88%9B%E5%BB%BA%EF%BC%9A-1"><span class="nav-number">4.2.</span> <span class="nav-text">使用命令行创建：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E7%BC%96%E8%AF%91%EF%BC%9A"><span class="nav-number">4.3.</span> <span class="nav-text">自动编译：</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-%E5%8A%A0%E8%BD%BDqm%E6%96%87%E4%BB%B6"><span class="nav-number">5.</span> <span class="nav-text">5. 加载qm文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CONFIG"><span class="nav-number"></span> <span class="nav-text">CONFIG</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#QM-FILES-RESOURCE-PREFIX"><span class="nav-number"></span> <span class="nav-text">QM_FILES_RESOURCE_PREFIX</span></a></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Xiao Siyu"
+      src="https://avatars.githubusercontent.com/xiaosiyu0603">
+  <p class="site-author-name" itemprop="name">Xiao Siyu</p>
+  <div class="site-description" itemprop="description">大咸鱼</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">38</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/xiaosiyu0603" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;xiaosiyu0603" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/big/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="pjax">
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xiaosiyu0603.github.io/posts/2025/05/04/Qt%E8%AF%AD%E8%A8%80%E6%96%87%E4%BB%B6%E7%9A%84%E8%87%AA%E5%8A%A8%E7%BC%96%E8%AF%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars.githubusercontent.com/xiaosiyu0603">
+      <meta itemprop="name" content="Xiao Siyu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="XiaoSiyu的博客">
+      <meta itemprop="description" content="大咸鱼">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Qt语言文件的自动编译 | XiaoSiyu的博客">
+      <meta itemprop="description" content="C++ Qt工程中使用Qt语言工具实现国际化，并在编译中自动编译和附加到Qt资源文件的方法。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Qt语言文件的自动编译
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-05-04 19:55:38 / 修改时间：20:07:34" itemprop="dateCreated datePublished" datetime="2025-05-04T19:55:38+08:00">2025-05-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BC%96%E7%A8%8B/cplusplus/" itemprop="url" rel="index"><span itemprop="name">C++</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BC%96%E7%A8%8B/Qt/" itemprop="url" rel="index"><span itemprop="name">Qt</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>401</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">C++ Qt工程中使用Qt语言工具实现国际化，并在编译中自动编译和附加到Qt资源文件的方法。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h4 id="1-登记ts目标"><a href="#1-登记ts目标" class="headerlink" title="1. 登记ts目标"></a>1. 登记ts目标</h4><h5 id="QMake工程加入ts文件位置和自动编译配置"><a href="#QMake工程加入ts文件位置和自动编译配置" class="headerlink" title="QMake工程加入ts文件位置和自动编译配置"></a>QMake工程加入ts文件位置和自动编译配置</h5><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"></span><br><span class="line">CONFIG += lrelease embed_translations</span><br><span class="line"></span><br><span class="line">TRANSLATIONS += i18n/app_zh.ts</span><br></pre></td></tr></table></figure>
+
+<p><code>CONFIG</code>的详情见<sup>[1]</sup>。</p>
+<p>Qt Linguist 会根据 TS 文件名自动设置区域<sup>[2]</sup>。</p>
+<h4 id="2-创建ts文件"><a href="#2-创建ts文件" class="headerlink" title="2. 创建ts文件"></a>2. 创建ts文件</h4><h5 id="使用IDE创建："><a href="#使用IDE创建：" class="headerlink" title="使用IDE创建："></a>使用IDE创建：</h5><ol>
+<li>Qt Creator打开工程文件</li>
+<li>菜单→工具→外部→Qt预言家→更新翻译</li>
+</ol>
+<h5 id="使用命令行创建："><a href="#使用命令行创建：" class="headerlink" title="使用命令行创建："></a>使用命令行创建：</h5><p>运行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lupdate project.pro</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-翻译ts文件中的条目"><a href="#3-翻译ts文件中的条目" class="headerlink" title="3. 翻译ts文件中的条目"></a>3. 翻译ts文件中的条目</h4><p>使用Qt Linguist打开ts文件，翻译条目。</p>
+<h4 id="4-编译ts文件"><a href="#4-编译ts文件" class="headerlink" title="4. 编译ts文件"></a>4. 编译ts文件</h4><h5 id="使用IDE创建：-1"><a href="#使用IDE创建：-1" class="headerlink" title="使用IDE创建："></a>使用IDE创建：</h5><ol>
+<li>Qt Creator打开工程文件</li>
+<li>菜单→工具→外部→Qt预言家→发布翻译</li>
+</ol>
+<h5 id="使用命令行创建：-1"><a href="#使用命令行创建：-1" class="headerlink" title="使用命令行创建："></a>使用命令行创建：</h5><p>运行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lrelease project.pro</span><br></pre></td></tr></table></figure>
+
+<h5 id="自动编译："><a href="#自动编译：" class="headerlink" title="自动编译："></a>自动编译：</h5><p>如果工程中有 <code>CONFIG += lrelease embed_translations</code>，则编译时会自动调用 <code>lrelease</code> 编译 <code>TRANSLATIONS</code> 和 <code>EXTRA_TRANSLATIONS</code> 中的文件，并将生成的 <code>.qm</code> 文件通过自动生成的资源文件嵌入到可执行文件中。</p>
+<h4 id="5-加载qm文件"><a href="#5-加载qm文件" class="headerlink" title="5. 加载qm文件"></a>5. 加载qm文件</h4><p>下面是一个使用翻译文件的Qt程序的例子：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QApplication&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QTranslator&gt;</span></span></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">QApplication <span class="title">app</span><span class="params">(argc, argv)</span></span>;</span><br><span class="line">    QTranslator translator;</span><br><span class="line">    translator.<span class="built_in">load</span>(<span class="string">&quot;:/i18n/app_zh&quot;</span>);   <span class="comment">// 加载&#x27;:/i18n/app_zh.qm&#x27;文件</span></span><br><span class="line">    app.<span class="built_in">installTranslator</span>(&amp;translator);</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">return</span> app.<span class="built_in">exec</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h4><ol>
+<li><p><a href="https://doc.qt.io/qt-6/qmake-variable-reference.html#config" target="_blank" rel="noopener">Variables | qmake Manual</a>；</p>
+<details><summary>展开</summary>
+
+<blockquote>
+<h3 id="CONFIG"><a href="#CONFIG" class="headerlink" title="CONFIG"></a>CONFIG</h3><p>...</p>
+<p>The following <code>CONFIG</code> values control compiler and linker flags:</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<td>lrelease</td>
+<td>Run lrelease for all files listed in <code>TRANSLATIONS</code> and <code>EXTRA_TRANSLATIONS</code>. If embed_translations is not set, install the generated .qm files into <code>QM_FILES_INSTALL_PATH</code>. Use <code>QMAKE_LRELEASE_FLAGS</code> to add options to the lrelease call. Not set by default.</td>
+</tr>
+<tr>
+<td>embed_translations</td>
+<td>Embed the generated translations from lrelease in the executable, under <code>QM_FILES_RESOURCE_PREFIX</code>. Requires lrelease to be set, too. Not set by default.</td>
+</tr>
+<tr>
+<td>...</td>
+<td>...</td>
+</tr>
+</tbody></table>
+<h3 id="QM-FILES-RESOURCE-PREFIX"><a href="#QM-FILES-RESOURCE-PREFIX" class="headerlink" title="QM_FILES_RESOURCE_PREFIX"></a>QM_FILES_RESOURCE_PREFIX</h3><p>Specifies the directory in the resource system where <code>.qm</code> files will be made available by <code>CONFIG += embed_translations</code>.</p>
+<p>The default is <code>:/i18n/</code>.</p>
+</blockquote>
+</details>
+</li>
+<li><p><a href="https://zhuanlan.zhihu.com/p/44536503" target="_blank" rel="noopener">超越 C++ 的 Qt 翻译 - 知乎</a>；</p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>Xiao Siyu
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://xiaosiyu0603.github.io/posts/2025/05/04/Qt%E8%AF%AD%E8%A8%80%E6%96%87%E4%BB%B6%E7%9A%84%E8%87%AA%E5%8A%A8%E7%BC%96%E8%AF%91/" title="Qt语言文件的自动编译">https://xiaosiyu0603.github.io/posts/2025/05/04/Qt语言文件的自动编译/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/cplusplus/" rel="tag"><i class="fa fa-tag"></i> C++</a>
+              <a href="/tags/Qt/" rel="tag"><i class="fa fa-tag"></i> Qt</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/2025/03/13/Clang%E5%9C%A8Windows%E4%B8%AD%E7%BC%96%E8%AF%91%E5%85%BC%E5%AE%B9Linux%20API%E7%9A%84%E4%BB%A3%E7%A0%81/" rel="prev" title="Clang在Windows中编译兼容Linux API的代码">
+                  <i class="fa fa-angle-left"></i> Clang在Windows中编译兼容Linux API的代码
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/2025/05/14/Qt%20Creater%E9%87%8D%E7%BD%AE%E9%85%8D%E7%BD%AE/" rel="next" title="Qt Creater重置配置">
+                  Qt Creater重置配置 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-wheelchair-move fa-bounce"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Xiao Siyu</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">18k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">1:02</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/xiaosiyu0603" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"xiaosiyu0603/xiaosiyu0603.github.io","issue_term":"pathname","theme":"github-light"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+
+</body>
+</html>

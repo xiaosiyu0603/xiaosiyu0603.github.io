@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#000080"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="https://avatars.githubusercontent.com/xiaosiyu0603">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://avatars.githubusercontent.com/xiaosiyu0603?s=32">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://avatars.githubusercontent.com/xiaosiyu0603?s=16">
+  <link rel="mask-icon" href="https://avatars.githubusercontent.com/xiaosiyu0603" color="#000080">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.css" integrity="sha256-zM8WXtG4eUn7dKKNMTuoWZub++VnSfaOpA/8PJfvTBo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous" defer></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xiaosiyu0603.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"stackoverflow-light","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat"},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="区别项粗体为推荐选择 架构 i686：32位x86 x86_64：64位x86_64  线程模型 win32：基于 Windows 原生线程（Windows API） posix：基于 POSIX 线程标准 mcf：Mingw-w64 C Library Fork， mingw-w64 项目的一个特定优化版本  运行时 msvcrt：Microsoft Visual C Runtime Libra">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MinGW-w64项目GCC不同发行版的区别">
+<meta property="og:url" content="https://xiaosiyu0603.github.io/posts/2025/02/14/MinGW-w64%E9%A1%B9%E7%9B%AEGCC%E4%B8%8D%E5%90%8C%E5%8F%91%E8%A1%8C%E7%89%88%E7%9A%84%E5%8C%BA%E5%88%AB/index.html">
+<meta property="og:site_name" content="XiaoSiyu的博客">
+<meta property="og:description" content="区别项粗体为推荐选择 架构 i686：32位x86 x86_64：64位x86_64  线程模型 win32：基于 Windows 原生线程（Windows API） posix：基于 POSIX 线程标准 mcf：Mingw-w64 C Library Fork， mingw-w64 项目的一个特定优化版本  运行时 msvcrt：Microsoft Visual C Runtime Libra">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-02-14T08:21:07.000Z">
+<meta property="article:modified_time" content="2025-06-24T11:06:34.432Z">
+<meta property="article:author" content="Xiao Siyu">
+<meta property="article:tag" content="C">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="GCC">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://xiaosiyu0603.github.io/posts/2025/02/14/MinGW-w64%E9%A1%B9%E7%9B%AEGCC%E4%B8%8D%E5%90%8C%E5%8F%91%E8%A1%8C%E7%89%88%E7%9A%84%E5%8C%BA%E5%88%AB/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xiaosiyu0603.github.io/posts/2025/02/14/MinGW-w64%E9%A1%B9%E7%9B%AEGCC%E4%B8%8D%E5%90%8C%E5%8F%91%E8%A1%8C%E7%89%88%E7%9A%84%E5%8C%BA%E5%88%AB/","path":"posts/2025/02/14/MinGW-w64项目GCC不同发行版的区别/","title":"MinGW-w64项目GCC不同发行版的区别"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>MinGW-w64项目GCC不同发行版的区别 | XiaoSiyu的博客</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script size="300" alpha="0.6" zIndex="-10" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.umd.js" integrity="sha256-hiUEBwFEpLF6DlB8sGXlKo4kPZ46Ui4qGpd0vrVkOm4=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/pjax.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.5.0/mermaid.min.js","integrity":"sha256-2obLuIPcceEhkE3G09G33hBdmE55ivVcZUlcKcGNHjU="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+  <script src="/js/third-party/fancybox.js" defer></script>
+
+  <script src="/js/third-party/pace.js" defer></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+<script async src="/lib/fireworks.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">XiaoSiyu的博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8C%BA%E5%88%AB%E9%A1%B9"><span class="nav-number">1.</span> <span class="nav-text">区别项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84"><span class="nav-number">1.1.</span> <span class="nav-text">架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.2.</span> <span class="nav-text">线程模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E6%97%B6"><span class="nav-number">1.3.</span> <span class="nav-text">运行时</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E5%9C%B0%E5%9D%80"><span class="nav-number">2.</span> <span class="nav-text">下载地址</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">3.</span> <span class="nav-text">参考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#i686%E5%92%8Cx86-64%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">4.</span> <span class="nav-text">i686和x86_64的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-i686"><span class="nav-number">4.1.</span> <span class="nav-text">1. i686</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-x86-64"><span class="nav-number">4.2.</span> <span class="nav-text">2. x86_64</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E6%AF%94%E6%80%BB%E7%BB%93"><span class="nav-number">4.3.</span> <span class="nav-text">对比总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%89%E6%8B%A9%E5%BB%BA%E8%AE%AE"><span class="nav-number">4.4.</span> <span class="nav-text">选择建议</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%89%E6%8B%A9-i686%EF%BC%8832-%E4%BD%8D%EF%BC%89%EF%BC%9A"><span class="nav-number">4.4.1.</span> <span class="nav-text">选择 i686（32 位）：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%89%E6%8B%A9-x86-64%EF%BC%8864-%E4%BD%8D%EF%BC%89%EF%BC%9A"><span class="nav-number">4.4.2.</span> <span class="nav-text">选择 x86_64（64 位）：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E6%9F%A5%E7%9C%8B%E7%9B%AE%E6%A0%87%E6%9E%B6%E6%9E%84"><span class="nav-number">4.5.</span> <span class="nav-text">如何查看目标架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">4.6.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mcf%E3%80%81win32%E3%80%81posix%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">5.</span> <span class="nav-text">mcf、win32、posix的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Win32"><span class="nav-number">5.1.</span> <span class="nav-text">1. Win32</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-POSIX"><span class="nav-number">5.2.</span> <span class="nav-text">2. POSIX</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-MCF"><span class="nav-number">5.3.</span> <span class="nav-text">3. MCF</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E6%AF%94%E6%80%BB%E7%BB%93"><span class="nav-number">5.4.</span> <span class="nav-text">对比总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%89%E6%8B%A9%E5%BB%BA%E8%AE%AE"><span class="nav-number">5.5.</span> <span class="nav-text">选择建议</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-Win32%EF%BC%9A"><span class="nav-number">5.5.1.</span> <span class="nav-text">使用 Win32：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-POSIX%EF%BC%9A"><span class="nav-number">5.5.2.</span> <span class="nav-text">使用 POSIX：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-MCF%EF%BC%9A"><span class="nav-number">5.5.3.</span> <span class="nav-text">使用 MCF：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.6.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#msvcrt%E5%92%8Cucrt%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">6.</span> <span class="nav-text">msvcrt和ucrt的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-MSVCRT"><span class="nav-number">6.1.</span> <span class="nav-text">1. MSVCRT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-UCRT"><span class="nav-number">6.2.</span> <span class="nav-text">2. UCRT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E5%8C%BA%E5%88%AB"><span class="nav-number">6.3.</span> <span class="nav-text">主要区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%89%E6%8B%A9%E5%BB%BA%E8%AE%AE"><span class="nav-number">6.4.</span> <span class="nav-text">选择建议</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-MSVCRT%EF%BC%9A"><span class="nav-number">6.4.1.</span> <span class="nav-text">使用 MSVCRT：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-UCRT%EF%BC%9A"><span class="nav-number">6.4.2.</span> <span class="nav-text">使用 UCRT：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%8C%BA%E5%88%86%E4%BD%BF%E7%94%A8%E7%9A%84%E8%BF%90%E8%A1%8C%E6%97%B6%E5%BA%93"><span class="nav-number">6.5.</span> <span class="nav-text">如何区分使用的运行时库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.6.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Xiao Siyu"
+      src="https://avatars.githubusercontent.com/xiaosiyu0603">
+  <p class="site-author-name" itemprop="name">Xiao Siyu</p>
+  <div class="site-description" itemprop="description">大咸鱼</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">38</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/xiaosiyu0603" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;xiaosiyu0603" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/big/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="pjax">
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xiaosiyu0603.github.io/posts/2025/02/14/MinGW-w64%E9%A1%B9%E7%9B%AEGCC%E4%B8%8D%E5%90%8C%E5%8F%91%E8%A1%8C%E7%89%88%E7%9A%84%E5%8C%BA%E5%88%AB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars.githubusercontent.com/xiaosiyu0603">
+      <meta itemprop="name" content="Xiao Siyu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="XiaoSiyu的博客">
+      <meta itemprop="description" content="大咸鱼">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="MinGW-w64项目GCC不同发行版的区别 | XiaoSiyu的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MinGW-w64项目GCC不同发行版的区别
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-02-14 16:21:07" itemprop="dateCreated datePublished" datetime="2025-02-14T16:21:07+08:00">2025-02-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-24 19:06:34" itemprop="dateModified" datetime="2025-06-24T19:06:34+08:00">2025-06-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BC%96%E7%A8%8B/C/" itemprop="url" rel="index"><span itemprop="name">C</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BC%96%E7%A8%8B/cplusplus/" itemprop="url" rel="index"><span itemprop="name">C++</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>11 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="区别项"><a href="#区别项" class="headerlink" title="区别项"></a>区别项</h2><p><em>粗体为推荐选择</em></p>
+<h3 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h3><ul>
+<li><code>i686</code>：32位x86</li>
+<li><b><code>x86_64</code></b>：64位x86_64</li>
+</ul>
+<h3 id="线程模型"><a href="#线程模型" class="headerlink" title="线程模型"></a>线程模型</h3><ul>
+<li><code>win32</code>：基于 Windows 原生线程（Windows API）</li>
+<li><b><code>posix</code></b>：基于 POSIX 线程标准</li>
+<li><code>mcf</code>：Mingw-w64 C Library Fork， <code>mingw-w64</code> 项目的一个特定优化版本</li>
+</ul>
+<h3 id="运行时"><a href="#运行时" class="headerlink" title="运行时"></a>运行时</h3><ul>
+<li><code>msvcrt</code>：Microsoft Visual C Runtime Library （VC6）</li>
+<li><b><code>ucrt</code></b>：Universal C Runtime Library （Win10起）</li>
+</ul>
+<span id="more"></span>
+
+<h2 id="下载地址"><a href="#下载地址" class="headerlink" title="下载地址"></a>下载地址</h2><p><a href="https://github.com/niXman/mingw-builds-binaries/releases" target="_blank" rel="noopener">GitHub发布页</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><em>以下内容由GPT-4o回答</em></p>
+<details class="note primary"><summary><h2 id="i686和x86-64的区别"><a href="#i686和x86-64的区别" class="headerlink" title="i686和x86_64的区别"></a><code>i686</code>和<code>x86_64</code>的区别</h2></summary>
+<p>在 <code>mingw-w64</code> 的发行版中，标签 <code>i686</code> 和 <code>x86_64</code> 指的是目标架构（目标 CPU 和指令集架构）的不同。这两者的主要区别如下：</p>
+<hr>
+<h3 id="1-i686"><a href="#1-i686" class="headerlink" title="1. i686"></a><strong>1. i686</strong></h3><ul>
+<li><strong>架构</strong>：32 位（x86）。</li>
+<li>特性：<ul>
+<li>目标是 32 位的 x86 架构（Intel 80386 及其后续兼容架构）。</li>
+<li>编译出的程序只能运行在 32 位操作系统上，或者在 64 位操作系统的 32 位兼容模式下运行。</li>
+<li>每个指针或内存地址占用 <strong>4 字节（32 位）</strong>。</li>
+<li>最大支持的虚拟内存空间为 <strong>4GB（单进程）</strong>，但实际可用空间会更少（因为系统和其他程序会占用部分内存）。</li>
+<li>适用于老旧的 32 位 Windows 系统或需要兼容 32 位硬件的场景。</li>
+</ul>
+</li>
+<li>优缺点：<ul>
+<li>优点：<ul>
+<li>可运行在更老的系统上，向后兼容性更好。</li>
+<li>编译出的程序和库体积通常较小。</li>
+</ul>
+</li>
+<li>缺点：<ul>
+<li>在现代硬件上性能可能不如 64 位程序。</li>
+<li>内存寻址和数据处理能力受限，无法充分利用现代硬件的 64 位特性。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="2-x86-64"><a href="#2-x86-64" class="headerlink" title="2. x86_64"></a><strong>2. x86_64</strong></h3><ul>
+<li><strong>架构</strong>：64 位。</li>
+<li><strong>特性</strong>：<ul>
+<li>目标是 64 位的 x86_64 架构（AMD64 或 Intel 64 指令集）。</li>
+<li>编译出的程序只能运行在 64 位操作系统上。</li>
+<li>每个指针或内存地址占用 <strong>8 字节（64 位）</strong>。</li>
+<li>支持更大的虚拟内存空间（理论上支持 16 EB，但实际受限于硬件和操作系统），可以轻松使用超过 <strong>4GB 的内存</strong>。</li>
+<li>充分利用现代 CPU 的 64 位特性，包括更大的寄存器、更高效的数学运算和更好的性能优化。</li>
+</ul>
+</li>
+<li><strong>优缺点</strong>：<ul>
+<li>优点：<ul>
+<li>性能更高，尤其是在处理大内存、大数据集或需要高精度计算时。</li>
+<li>能利用所有现代硬件的特性（如扩展的寄存器集）。</li>
+<li>不受 4GB 内存限制，适合大型程序和现代应用程序。</li>
+</ul>
+</li>
+<li>缺点：<ul>
+<li>不能运行在 32 位操作系统上。</li>
+<li>程序和库的体积通常比 32 位程序稍大（因为指针和某些数据类型更大）。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="对比总结"><a href="#对比总结" class="headerlink" title="对比总结"></a><strong>对比总结</strong></h3><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>i686 (32 位)</th>
+<th>x86_64 (64 位)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>架构</strong></td>
+<td>32 位 x86</td>
+<td>64 位 x86_64</td>
+</tr>
+<tr>
+<td><strong>指针大小</strong></td>
+<td>4 字节</td>
+<td>8 字节</td>
+</tr>
+<tr>
+<td><strong>内存寻址</strong></td>
+<td>最大 4GB</td>
+<td>理论上支持 16EB，实际远超 4GB</td>
+</tr>
+<tr>
+<td><strong>兼容性</strong></td>
+<td>支持运行在 32 位和 64 位 Windows 系统上</td>
+<td>只能运行在 64 位 Windows 系统上</td>
+</tr>
+<tr>
+<td><strong>目标系统</strong></td>
+<td>老旧的 32 位硬件和操作系统</td>
+<td>现代 64 位硬件和操作系统</td>
+</tr>
+<tr>
+<td><strong>性能</strong></td>
+<td>较低，受限于 32 位架构</td>
+<td>更高，充分利用 64 位硬件特性</td>
+</tr>
+<tr>
+<td><strong>程序体积</strong></td>
+<td>较小</td>
+<td>较大（指针和数据结构占用更多内存）</td>
+</tr>
+<tr>
+<td><strong>适用场景</strong></td>
+<td>老旧系统、资源受限的环境</td>
+<td>现代应用、大型项目、高性能需求</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="选择建议"><a href="#选择建议" class="headerlink" title="选择建议"></a><strong>选择建议</strong></h3><h4 id="选择-i686（32-位）："><a href="#选择-i686（32-位）：" class="headerlink" title="选择 i686（32 位）："></a><strong>选择 i686（32 位）：</strong></h4><ul>
+<li>如果需要兼容 32 位 Windows 系统或老旧硬件。</li>
+<li>如果程序本身资源需求小，不需要大量内存或 64 位计算能力。</li>
+<li>如果目标用户群体仍在使用 32 位操作系统。</li>
+</ul>
+<h4 id="选择-x86-64（64-位）："><a href="#选择-x86-64（64-位）：" class="headerlink" title="选择 x86_64（64 位）："></a><strong>选择 x86_64（64 位）：</strong></h4><ul>
+<li>如果目标是现代 64 位硬件和操作系统（Windows 10 或更高版本）。</li>
+<li>如果程序需要处理大数据集、大内存或高性能计算。</li>
+<li>如果你使用的是现代开发环境，并想充分利用现代硬件特性。</li>
+</ul>
+<hr>
+<h3 id="如何查看目标架构"><a href="#如何查看目标架构" class="headerlink" title="如何查看目标架构"></a><strong>如何查看目标架构</strong></h3><p>在使用 <code>gcc</code> 或 <code>mingw-w64</code> 时，可以通过检查编译器的输出来确定目标架构。例如：</p>
+<p>运行以下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -v</span><br></pre></td></tr></table></figure>
+
+<p>输出中可以看到类似以下内容：</p>
+<ul>
+<li><code>Target: i686-w64-mingw32</code>：表示目标架构是 32 位。</li>
+<li><code>Target: x86_64-w64-mingw32</code>：表示目标架构是 64 位。</li>
+</ul>
+<hr>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h3><ul>
+<li><code>i686</code> 是面向 32 位系统和硬件的编译器配置，适合老旧系统。</li>
+<li><code>x86_64</code> 是面向 64 位系统和硬件的编译器配置，更适合现代应用程序和高性能需求。</li>
+</ul>
+
+</details>
+
+<details class="note primary"><summary><h2 id="mcf、win32、posix的区别"><a href="#mcf、win32、posix的区别" class="headerlink" title="mcf、win32、posix的区别"></a><code>mcf</code>、<code>win32</code>、<code>posix</code>的区别</h2></summary>
+<p>在 <code>mingw-w64</code> 的发行版中，<code>mcf</code>、<code>win32</code> 和 <code>posix</code> 是不同的<strong>线程模型</strong>（Thread Model）实现方式。它们的区别主要在于多线程支持的方式和目标特性。以下是它们的详细比较：</p>
+<hr>
+<h3 id="1-Win32"><a href="#1-Win32" class="headerlink" title="1. Win32"></a><strong>1. Win32</strong></h3><ul>
+<li><strong>线程模型</strong>：基于 Windows 原生线程（Windows API）。</li>
+<li><strong>实现方式</strong>：<ul>
+<li>使用 Windows 原生的线程 API（如 <code>CreateThread</code>、<code>WaitForSingleObject</code>）。</li>
+<li>不依赖 POSIX 线程标准，完全基于 WinAPI。</li>
+</ul>
+</li>
+<li><strong>特点</strong>：<ul>
+<li>性能较高，因为直接使用 Windows 原生线程，不需要额外的抽象层。</li>
+<li>不支持 POSIX 线程 API，例如 <code>pthread_create</code>。</li>
+<li>适合纯 Windows 环境开发的项目。</li>
+</ul>
+</li>
+<li><strong>优点</strong>：<ul>
+<li>性能好，尤其是在线程密集型场景中。</li>
+<li>不需要引入额外的线程库（如 <code>winpthreads</code>），减少了依赖。</li>
+</ul>
+</li>
+<li><strong>缺点</strong>：<ul>
+<li>缺乏跨平台兼容性。</li>
+<li>不支持 POSIX 标准的线程或同步 API，可能需要重写相关代码。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="2-POSIX"><a href="#2-POSIX" class="headerlink" title="2. POSIX"></a><strong>2. POSIX</strong></h3><ul>
+<li><strong>线程模型</strong>：基于 POSIX 线程标准（<code>pthreads</code>）。</li>
+<li><strong>实现方式</strong>：<ul>
+<li>使用 <code>winpthreads</code>（Mingw-w64 提供的 POSIX 线程实现）在 Windows 上模拟 POSIX 线程行为。</li>
+<li>提供完整的 POSIX 线程 API 兼容性。</li>
+</ul>
+</li>
+<li><strong>特点</strong>：<ul>
+<li>兼容 POSIX 标准的线程 API，例如 <code>pthread_create</code>、<code>pthread_mutex_lock</code> 等。</li>
+<li>适合需要跨平台兼容的项目，尤其是从 Linux 移植到 Windows 的代码。</li>
+<li>支持现代 C++ 标准（如 C++11&#x2F;14&#x2F;17 的多线程特性）。</li>
+</ul>
+</li>
+<li><strong>优点</strong>：<ul>
+<li>提供更好的跨平台支持，尤其适合需要同时运行在 Linux 和 Windows 上的项目。</li>
+<li>与现代 C++ 标准库的线程支持更兼容。</li>
+</ul>
+</li>
+<li><strong>缺点</strong>：<ul>
+<li>性能稍低，因为 <code>winpthreads</code> 是基于 Windows 线程实现的一个抽象层。</li>
+<li>可能引入与 <code>winpthreads</code> 实现相关的兼容性问题。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="3-MCF"><a href="#3-MCF" class="headerlink" title="3. MCF"></a><strong>3. MCF</strong></h3><ul>
+<li><strong>全称</strong>：Mingw-w64 C Library Fork。</li>
+<li><strong>线程模型</strong>：类似于 Win32，但由 <code>mingw-w64</code> 项目对线程库进行了特殊优化。</li>
+<li><strong>实现方式</strong>：<ul>
+<li>基于 Windows 原生线程模型，但对部分标准库函数（如 <code>mutex</code>、<code>thread</code> 等）进行了改进。</li>
+<li>通过直接使用 Windows API 实现线程支持，同时兼容部分 C++ 标准线程功能。</li>
+</ul>
+</li>
+<li><strong>特点</strong>：<ul>
+<li>性能与 <code>win32</code> 类似，直接使用 Windows 原生线程 API。</li>
+<li>提供更好的 C++ 标准库支持。</li>
+<li>是 <code>mingw-w64</code> 项目的一个特定优化版本，与主流的 <code>win32</code> 和 <code>posix</code> 模型有些不同。</li>
+</ul>
+</li>
+<li><strong>优点</strong>：<ul>
+<li>性能接近 <code>win32</code>，兼容性略优。</li>
+<li>适合需要现代 C++ 标准库支持的 Windows 应用。</li>
+</ul>
+</li>
+<li><strong>缺点</strong>：<ul>
+<li>兼容性不如 <code>posix</code>，跨平台能力有限。</li>
+<li>是 <code>mingw-w64</code> 项目独有的实现，可能不适合需要更通用实现的项目。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="对比总结"><a href="#对比总结" class="headerlink" title="对比总结"></a><strong>对比总结</strong></h3><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>Win32</th>
+<th>POSIX</th>
+<th>MCF</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>线程模型</strong></td>
+<td>Windows 原生线程（WinAPI）</td>
+<td>POSIX 线程（通过 <code>winpthreads</code> 实现）</td>
+<td>Windows 原生线程（<code>mingw-w64</code> 优化版）</td>
+</tr>
+<tr>
+<td><strong>跨平台能力</strong></td>
+<td>差，仅适合 Windows</td>
+<td>好，适合跨平台项目</td>
+<td>一般，仅适合 Windows</td>
+</tr>
+<tr>
+<td><strong>性能</strong></td>
+<td>高，直接调用 Windows API</td>
+<td>较低，有抽象层开销</td>
+<td>高，接近 Win32</td>
+</tr>
+<tr>
+<td><strong>标准支持</strong></td>
+<td>不支持 POSIX 线程 API</td>
+<td>支持 POSIX 线程 API</td>
+<td>支持部分现代 C++ 标准线程功能</td>
+</tr>
+<tr>
+<td><strong>适用场景</strong></td>
+<td>仅限 Windows 项目</td>
+<td>跨平台项目或从 Linux 移植的项目</td>
+<td>Windows 应用，需标准库支持</td>
+</tr>
+<tr>
+<td><strong>实现复杂度</strong></td>
+<td>简单，直接调用 Windows API</td>
+<td>较复杂，基于 <code>winpthreads</code></td>
+<td>中等，<code>mingw-w64</code> 特有优化</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="选择建议"><a href="#选择建议" class="headerlink" title="选择建议"></a><strong>选择建议</strong></h3><h4 id="使用-Win32："><a href="#使用-Win32：" class="headerlink" title="使用 Win32："></a><strong>使用 Win32：</strong></h4><ul>
+<li>如果你的项目专门面向 Windows 平台开发。</li>
+<li>如果你追求多线程的高性能，并且代码不依赖 POSIX 线程 API。</li>
+<li>如果你希望减少依赖，只使用原生的 Windows API。</li>
+</ul>
+<h4 id="使用-POSIX："><a href="#使用-POSIX：" class="headerlink" title="使用 POSIX："></a><strong>使用 POSIX：</strong></h4><ul>
+<li>如果你的项目需要跨平台兼容，尤其是从 Linux 移植到 Windows 的代码。</li>
+<li>如果你的代码使用了 POSIX 线程 API（如 <code>pthread</code>）或依赖于 POSIX 标准库。</li>
+<li>如果你使用的是现代 C++ 标准（如 C++11&#x2F;14&#x2F;17），需要线程相关功能。</li>
+</ul>
+<h4 id="使用-MCF："><a href="#使用-MCF：" class="headerlink" title="使用 MCF："></a><strong>使用 MCF：</strong></h4><ul>
+<li>如果你的项目是基于 Windows 的，但需要较好的 C++ 标准库支持。</li>
+<li>如果你希望兼顾性能和一定程度的标准兼容性。</li>
+<li>如果你专门使用 <code>mingw-w64</code> 工具链，并希望利用其优化特性。</li>
+</ul>
+<hr>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h3><ul>
+<li><strong>Win32</strong>：性能最高，适合纯 Windows 开发，但不支持 POSIX。</li>
+<li><strong>POSIX</strong>：跨平台支持最佳，适合需要 POSIX 线程 API 的项目，但性能稍逊。</li>
+<li><strong>MCF</strong>：性能接近 Win32，同时对 C++ 标准库支持更好，是 <code>mingw-w64</code> 的特定优化版本。</li>
+</ul>
+
+</details>
+
+<details class="note primary"><summary><h2 id="msvcrt和ucrt的区别"><a href="#msvcrt和ucrt的区别" class="headerlink" title="msvcrt和ucrt的区别"></a><code>msvcrt</code>和<code>ucrt</code>的区别</h2></summary>
+<p>在 Windows 平台上，使用 <code>mingw-w64</code> 编译器时，运行时库（C Runtime Library，简称 CRT）的选择主要有两种：<code>ucrt</code> 和 <code>msvcrt</code>。它们的区别主要在于设计目的、支持的功能以及兼容性方面。以下是两者的详细比较：</p>
+<hr>
+<h3 id="1-MSVCRT"><a href="#1-MSVCRT" class="headerlink" title="1. MSVCRT"></a><strong>1. MSVCRT</strong></h3><ul>
+<li><strong>全称</strong>：Microsoft Visual C Runtime Library。</li>
+<li><strong>特性</strong>：<ul>
+<li>是 Windows 自带的运行时库，长期以来与 Windows 一起发布。</li>
+<li>大多数 Windows 系统内置了这个运行时库，通常无需额外安装。</li>
+<li>是一个<strong>老旧的 C 运行时库</strong>，最初设计用于 Visual Studio 6（1998 年发布），支持 C89 标准（部分支持 C99 标准）。</li>
+<li>对现代 C&#x2F;C++ 标准的支持有限，不支持 C11 或更高版本的一些特性。</li>
+<li>线程安全性和某些 API 的行为可能与现代标准有所差异。</li>
+</ul>
+</li>
+<li><strong>优点</strong>：<ul>
+<li>不需要额外的运行时安装，因为 MSVCRT 默认存在于 Windows 系统中。</li>
+<li>在需要运行时环境非常小的项目中，使用 MSVCRT 可以减少额外依赖。</li>
+<li>对于一些老旧的项目（例如，使用 C89 的项目），它可能更适合。</li>
+</ul>
+</li>
+<li><strong>缺点</strong>：<ul>
+<li>不支持现代 C 标准（如 C99 完全支持、C11 等）。</li>
+<li>可能引发兼容性问题，例如：某些函数（如 <code>printf</code>）的行为与标准实现不同。</li>
+<li>不适合现代 C++ 项目（如 C++11&#x2F;14&#x2F;17），尤其是涉及多线程或更高级的语言特性时。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="2-UCRT"><a href="#2-UCRT" class="headerlink" title="2. UCRT"></a><strong>2. UCRT</strong></h3><ul>
+<li><strong>全称</strong>：Universal C Runtime Library。</li>
+<li><strong>特性</strong>：<ul>
+<li>是 Microsoft 从 Windows 10 开始推出的新的通用 C 运行时库。</li>
+<li>它是现代化的运行时库，支持 C99 标准的绝大多数特性，并为 C11 提供了一定程度的支持。</li>
+<li>与 MSVCRT 不同，UCRT 是一个独立的组件，可以随 Windows 更新安装（从 Windows 10 开始默认包含）。</li>
+<li>提供更一致的行为，改进了与现代 C&#x2F;C++ 标准的兼容性。</li>
+</ul>
+</li>
+<li><strong>优点</strong>：<ul>
+<li>更符合现代 C&#x2F;C++ 标准，适合使用现代 C++ 特性的项目。</li>
+<li>提供了更好的跨平台兼容性，尤其是在移植代码时。</li>
+<li>在多线程场景下行为更加可靠（如 <code>locale</code> 和 <code>printf</code> 的多线程支持）。</li>
+<li>与 Windows SDK 和 Visual Studio 的工具链更兼容。</li>
+</ul>
+</li>
+<li><strong>缺点</strong>：<ul>
+<li>在 Windows 10 以下版本的系统中，可能需要额外安装 UCRT。</li>
+<li>对于非常老旧的项目，可能会出现兼容性问题。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="主要区别"><a href="#主要区别" class="headerlink" title="主要区别"></a><strong>主要区别</strong></h3><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>MSVCRT</th>
+<th>UCRT</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>标准支持</strong></td>
+<td>C89（部分支持 C99），不支持 C11</td>
+<td>支持 C99 大部分特性，部分支持 C11</td>
+</tr>
+<tr>
+<td><strong>系统自带</strong></td>
+<td>默认存在于所有 Windows 系统中</td>
+<td>Windows 10 默认包含，旧系统需手动安装</td>
+</tr>
+<tr>
+<td><strong>现代化支持</strong></td>
+<td>不适合现代 C&#x2F;C++ 项目</td>
+<td>更适合现代 C&#x2F;C++ 项目</td>
+</tr>
+<tr>
+<td><strong>跨平台兼容性</strong></td>
+<td>跨平台兼容性差</td>
+<td>更好地支持跨平台和标准化开发</td>
+</tr>
+<tr>
+<td><strong>多线程支持</strong></td>
+<td>线程安全性较差，行为不一致</td>
+<td>改进了线程安全性，行为更符合现代标准</td>
+</tr>
+<tr>
+<td><strong>适用场景</strong></td>
+<td>老旧 C 项目、小型应用</td>
+<td>现代 C++ 项目、需要跨平台开发的项目</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="选择建议"><a href="#选择建议" class="headerlink" title="选择建议"></a><strong>选择建议</strong></h3><h4 id="使用-MSVCRT："><a href="#使用-MSVCRT：" class="headerlink" title="使用 MSVCRT："></a><strong>使用 MSVCRT：</strong></h4><ul>
+<li>如果你的项目是老旧的 C 项目，或基于 C89&#x2F;C90 开发。</li>
+<li>如果需要尽量减少运行时库依赖（因为 MSVCRT 通常自带在 Windows 系统中，无需额外安装）。</li>
+</ul>
+<h4 id="使用-UCRT："><a href="#使用-UCRT：" class="headerlink" title="使用 UCRT："></a><strong>使用 UCRT：</strong></h4><ul>
+<li>如果你的项目使用现代 C&#x2F;C++ 标准（如 C99、C++11&#x2F;14&#x2F;17）。</li>
+<li>如果你的代码需要更好的跨平台兼容性，或依赖于标准行为（如线程安全的 <code>printf</code>）。</li>
+<li>如果你开发针对 Windows 10+ 的现代应用程序。</li>
+</ul>
+<hr>
+<h3 id="如何区分使用的运行时库"><a href="#如何区分使用的运行时库" class="headerlink" title="如何区分使用的运行时库"></a><strong>如何区分使用的运行时库</strong></h3><p>在使用 <code>gcc</code> 或 <code>mingw-w64</code> 时，可以通过编译器的配置查看所选的运行时库：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -v</span><br></pre></td></tr></table></figure>
+
+<p>查看输出中是否包含 <code>ucrt</code> 或 <code>msvcrt</code> 的相关信息。例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--with-default-runtime=ucrt</span><br></pre></td></tr></table></figure>
+
+<p>或：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--with-default-runtime=msvcrt</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h3><ul>
+<li><strong>MSVCRT</strong> 是旧的、默认存在的运行时库，适合老旧项目。</li>
+<li><strong>UCRT</strong> 是现代化的运行时库，更符合标准，适合现代 C&#x2F;C++ 项目，尤其是在 Windows 10 上开发时。</li>
+</ul>
+
+</details>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>Xiao Siyu
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://xiaosiyu0603.github.io/posts/2025/02/14/MinGW-w64%E9%A1%B9%E7%9B%AEGCC%E4%B8%8D%E5%90%8C%E5%8F%91%E8%A1%8C%E7%89%88%E7%9A%84%E5%8C%BA%E5%88%AB/" title="MinGW-w64项目GCC不同发行版的区别">https://xiaosiyu0603.github.io/posts/2025/02/14/MinGW-w64项目GCC不同发行版的区别/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/C/" rel="tag"><i class="fa fa-tag"></i> C</a>
+              <a href="/tags/cplusplus/" rel="tag"><i class="fa fa-tag"></i> C++</a>
+              <a href="/tags/GCC/" rel="tag"><i class="fa fa-tag"></i> GCC</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/2025/02/01/Linux%E6%B5%8B%E8%AF%95%E7%BD%91%E7%BB%9C%E8%BF%9E%E6%8E%A5/" rel="prev" title="Linux测试网络连接">
+                  <i class="fa fa-angle-left"></i> Linux测试网络连接
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/2025/03/13/Clang%E5%9C%A8Windows%E4%B8%AD%E7%BC%96%E8%AF%91%E5%85%BC%E5%AE%B9Linux%20API%E7%9A%84%E4%BB%A3%E7%A0%81/" rel="next" title="Clang在Windows中编译兼容Linux API的代码">
+                  Clang在Windows中编译兼容Linux API的代码 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-wheelchair-move fa-bounce"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Xiao Siyu</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">18k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">1:02</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/xiaosiyu0603" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"xiaosiyu0603/xiaosiyu0603.github.io","issue_term":"pathname","theme":"github-light"}</script>
+<script src="/js/third-party/comments/utterances.js" defer></script>
+
+</body>
+</html>

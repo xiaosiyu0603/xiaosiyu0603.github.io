@@ -311,7 +311,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>269</span>
+      <span>271</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -339,10 +339,9 @@
 <p>因此，应当提前导入PySide6，再开启消息循环，以绕过IPython的自动选择机制：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> PySide6.QtWidgets <span class="keyword">import</span> *</span><br><span class="line">%gui qt</span><br></pre></td></tr></table></figure>
 
-<blockquote>
-<p>[!CAUTION]</p>
-<p>这里必须是<code>PySide6.QtWidgets</code>，因为<code>QApplication</code>类在<code>QtWidgets</code>模块中定义，而IPython的自动选择机制会依赖于<code>QApplication</code>。</p>
-</blockquote>
+<div class="note danger"><p>这里必须是<code>PySide6.QtWidgets</code>，因为<code>QApplication</code>类在<code>QtWidgets</code>模块中定义，而IPython的自动选择机制会依赖于<code>QApplication</code>。</p>
+</div>
+
 <p><code>%gui</code>相关代码可以在<code>IPython.terminal.pt_inputhooks</code>库中找到。</p>
 <h4 id="最终结论"><a href="#最终结论" class="headerlink" title="最终结论"></a>最终结论</h4><p>使用如下代码即可在IPython中运行PyQt或PySide，并且导入常用的模块：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> PySide6.QtCore <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> PySide6.QtGui <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> PySide6.QtWidgets <span class="keyword">import</span> *</span><br><span class="line">%gui qt</span><br></pre></td></tr></table></figure>

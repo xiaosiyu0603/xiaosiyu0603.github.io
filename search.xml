@@ -1983,10 +1983,9 @@ mate-screensaver-command -l     # MATE桌面</code></pre>
 <p>因此，应当提前导入PySide6，再开启消息循环，以绕过IPython的自动选择机制：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> PySide6.QtWidgets <span class="keyword">import</span> *</span><br><span class="line">%gui qt</span><br></pre></td></tr></table></figure>
 
-<blockquote>
-<p>[!CAUTION]</p>
-<p>这里必须是<code>PySide6.QtWidgets</code>，因为<code>QApplication</code>类在<code>QtWidgets</code>模块中定义，而IPython的自动选择机制会依赖于<code>QApplication</code>。</p>
-</blockquote>
+<div class="note danger"><p>这里必须是<code>PySide6.QtWidgets</code>，因为<code>QApplication</code>类在<code>QtWidgets</code>模块中定义，而IPython的自动选择机制会依赖于<code>QApplication</code>。</p>
+</div>
+
 <p><code>%gui</code>相关代码可以在<code>IPython.terminal.pt_inputhooks</code>库中找到。</p>
 <h4 id="最终结论"><a href="#最终结论" class="headerlink" title="最终结论"></a>最终结论</h4><p>使用如下代码即可在IPython中运行PyQt或PySide，并且导入常用的模块：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> PySide6.QtCore <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> PySide6.QtGui <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> PySide6.QtWidgets <span class="keyword">import</span> *</span><br><span class="line">%gui qt</span><br></pre></td></tr></table></figure>
@@ -2139,6 +2138,54 @@ xz -zvk9ef -T 0 some-dir.tar</code></pre>
       </tags>
   </entry>
   <entry>
+    <title>常用GCC编译选项</title>
+    <url>/posts/2023/04/11/%E5%B8%B8%E7%94%A8GCC%E7%BC%96%E8%AF%91%E9%80%89%E9%A1%B9/</url>
+    <content><![CDATA[<h3 id="指定输出文件名"><a href="#指定输出文件名" class="headerlink" title="指定输出文件名"></a>指定输出文件名</h3><ul>
+<li>-o <em>file</em>：编译完成的输出到<em>file</em>，否则会使用非常烂的默认名字（比如a.exe）。</li>
+</ul>
+<span id="more"></span>
+
+<h3 id="指定宏定义"><a href="#指定宏定义" class="headerlink" title="指定宏定义"></a>指定宏定义</h3><p>以下信息与手册上的写法略有出入<sup>[5]</sup>，但是手册上的写法有时会报错。</p>
+<ul>
+<li>-D<em>name</em>：等效于<code>#define name</code>。</li>
+<li>-D<em>name</em>&#x3D;<em>definition</em>：等效于<code>#define name definition</code>。</li>
+</ul>
+<p>这样指定的宏定义在引用任何头文件前即存在。</p>
+<h3 id="包含头文件"><a href="#包含头文件" class="headerlink" title="包含头文件"></a>包含头文件</h3><ul>
+<li>-I<em>dir</em>：将目录<em>dir</em>添加到搜索头文件的目录列表中<sup>[2]</sup>。</li>
+</ul>
+<div class="note info"><h4 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h4><p>此处有坑点，某些老版本的GCC不支持<code>-I./</code>，会找不到文件，只能用<code>-I.</code></p>
+</div>
+
+<h3 id="链接库"><a href="#链接库" class="headerlink" title="链接库"></a>链接库</h3><ul>
+<li>-L<em>dir</em>：将目录<em>dir</em>添加到链接库要搜索的目录列表中<sup>[2]</sup>。</li>
+<li>-l<em>library</em>：链接时搜索名为<em>library</em>的库<sup>[3]</sup>。对应的库文件名为lib<em>library</em>.a或lib<em>library</em>.so（Linux）。<br>注：-l选项要放在源文件列表后，同时依赖其他库的库要放在顺序靠前的位置，否则会出错。<br>比如，使用pthread库时要增加-lpthread参数，以链接libpthread.a。</li>
+</ul>
+<h3 id="查看帮助"><a href="#查看帮助" class="headerlink" title="查看帮助"></a>查看帮助</h3><p>运行</p>
+<pre><code class="highlight shell">gcc --help
+g++ --help</code></pre>
+
+<p>打印的信息极少，因此还是需要查阅手册。</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ol>
+<li><a href="https://gcc.gnu.org/onlinedocs/gcc/Option-Summary.html" target="_blank" rel="noopener">3.1 Option Summary (Using the GNU Compiler Collection (GCC))</a>；</li>
+<li><a href="https://gcc.gnu.org/onlinedocs/gcc/Directory-Options.html" target="_blank" rel="noopener">3.16 Options for Directory Search (Using the GNU Compiler Collection (GCC))</a>；</li>
+<li><a href="https://gcc.gnu.org/onlinedocs/gcc/Link-Options.html" target="_blank" rel="noopener">3.15 Options for Linking (Using the GNU Compiler Collection (GCC))</a>；</li>
+<li><a href="https://blog.csdn.net/surgewong/article/details/39236707" target="_blank" rel="noopener">gcc&#x2F;g++ 链接库的编译与链接 - CSDN博客</a>；</li>
+<li><a href="https://gcc.gnu.org/onlinedocs/gcc/Preprocessor-Options.html" target="_blank" rel="noopener">3.13 Options Controlling the Preprocessor (Using the GNU Compiler Collection (GCC))</a>；</li>
+</ol>
+]]></content>
+      <categories>
+        <category>编程</category>
+        <category>C</category>
+        <category>C++</category>
+      </categories>
+      <tags>
+        <tag>C</tag>
+        <tag>C++</tag>
+        <tag>GCC</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>将GitHub Action产生的Hexo网站在另一仓库的GitHub Page托管</title>
     <url>/posts/2025/06/16/%E5%B0%86GitHub%20Action%E4%BA%A7%E7%94%9F%E7%9A%84Hexo%E7%BD%91%E7%AB%99%E5%9C%A8%E5%8F%A6%E4%B8%80%E4%BB%93%E5%BA%93%E7%9A%84GitHub%20Page%E6%89%98%E7%AE%A1/</url>
     <content><![CDATA[<h3 id="一、创造源仓库和目标仓库"><a href="#一、创造源仓库和目标仓库" class="headerlink" title="一、创造源仓库和目标仓库"></a>一、创造源仓库和目标仓库</h3><ol>
@@ -2218,54 +2265,6 @@ xz -zvk9ef -T 0 some-dir.tar</code></pre>
         <tag>Hexo</tag>
         <tag>NexT</tag>
         <tag>Blog</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>常用GCC编译选项</title>
-    <url>/posts/2023/04/11/%E5%B8%B8%E7%94%A8GCC%E7%BC%96%E8%AF%91%E9%80%89%E9%A1%B9/</url>
-    <content><![CDATA[<h3 id="指定输出文件名"><a href="#指定输出文件名" class="headerlink" title="指定输出文件名"></a>指定输出文件名</h3><ul>
-<li>-o <em>file</em>：编译完成的输出到<em>file</em>，否则会使用非常烂的默认名字（比如a.exe）。</li>
-</ul>
-<span id="more"></span>
-
-<h3 id="指定宏定义"><a href="#指定宏定义" class="headerlink" title="指定宏定义"></a>指定宏定义</h3><p>以下信息与手册上的写法略有出入<sup>[5]</sup>，但是手册上的写法有时会报错。</p>
-<ul>
-<li>-D<em>name</em>：等效于<code>#define name</code>。</li>
-<li>-D<em>name</em>&#x3D;<em>definition</em>：等效于<code>#define name definition</code>。</li>
-</ul>
-<p>这样指定的宏定义在引用任何头文件前即存在。</p>
-<h3 id="包含头文件"><a href="#包含头文件" class="headerlink" title="包含头文件"></a>包含头文件</h3><ul>
-<li>-I<em>dir</em>：将目录<em>dir</em>添加到搜索头文件的目录列表中<sup>[2]</sup>。</li>
-</ul>
-<div class="note info"><h4 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h4><p>此处有坑点，某些老版本的GCC不支持<code>-I./</code>，会找不到文件，只能用<code>-I.</code></p>
-</div>
-
-<h3 id="链接库"><a href="#链接库" class="headerlink" title="链接库"></a>链接库</h3><ul>
-<li>-L<em>dir</em>：将目录<em>dir</em>添加到链接库要搜索的目录列表中<sup>[2]</sup>。</li>
-<li>-l<em>library</em>：链接时搜索名为<em>library</em>的库<sup>[3]</sup>。对应的库文件名为lib<em>library</em>.a或lib<em>library</em>.so（Linux）。<br>注：-l选项要放在源文件列表后，同时依赖其他库的库要放在顺序靠前的位置，否则会出错。<br>比如，使用pthread库时要增加-lpthread参数，以链接libpthread.a。</li>
-</ul>
-<h3 id="查看帮助"><a href="#查看帮助" class="headerlink" title="查看帮助"></a>查看帮助</h3><p>运行</p>
-<pre><code class="highlight shell">gcc --help
-g++ --help</code></pre>
-
-<p>打印的信息极少，因此还是需要查阅手册。</p>
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ol>
-<li><a href="https://gcc.gnu.org/onlinedocs/gcc/Option-Summary.html" target="_blank" rel="noopener">3.1 Option Summary (Using the GNU Compiler Collection (GCC))</a>；</li>
-<li><a href="https://gcc.gnu.org/onlinedocs/gcc/Directory-Options.html" target="_blank" rel="noopener">3.16 Options for Directory Search (Using the GNU Compiler Collection (GCC))</a>；</li>
-<li><a href="https://gcc.gnu.org/onlinedocs/gcc/Link-Options.html" target="_blank" rel="noopener">3.15 Options for Linking (Using the GNU Compiler Collection (GCC))</a>；</li>
-<li><a href="https://blog.csdn.net/surgewong/article/details/39236707" target="_blank" rel="noopener">gcc&#x2F;g++ 链接库的编译与链接 - CSDN博客</a>；</li>
-<li><a href="https://gcc.gnu.org/onlinedocs/gcc/Preprocessor-Options.html" target="_blank" rel="noopener">3.13 Options Controlling the Preprocessor (Using the GNU Compiler Collection (GCC))</a>；</li>
-</ol>
-]]></content>
-      <categories>
-        <category>编程</category>
-        <category>C</category>
-        <category>C++</category>
-      </categories>
-      <tags>
-        <tag>C</tag>
-        <tag>C++</tag>
-        <tag>GCC</tag>
       </tags>
   </entry>
   <entry>

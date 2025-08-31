@@ -986,27 +986,37 @@ mate-screensaver-command -l     # MATE桌面</code></pre>
 <li><p>将字体文件放到<code>/usr/share/fonts/truetype/</code>目录或<code>~/.local/share/fonts/</code></p>
 </li>
 <li><p>运行（可能需要<code>sudo</code>）</p>
- <pre><code class="highlight shell">fc-cache -f -v</code></pre>
-<p> 重建系统字体缓存</p>
+<pre><code class="highlight shell">fc-cache -f -v</code></pre>
+
+<p>重建系统字体缓存</p>
 </li>
-<li><p>删除matplotlib缓存<br> python执行</p>
- <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line"><span class="built_in">print</span>(matplotlib.get_cachedir())</span><br><span class="line"><span class="comment"># &#x27;~/.cache/matplotlib&#x27;</span></span><br></pre></td></tr></table></figure>
-<p> 删除该目录</p>
- <pre><code class="highlight shell">rm -rf ~/.cache/matplotlib</code></pre>
+<li><p>删除matplotlib缓存<br>python执行</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line"><span class="built_in">print</span>(matplotlib.get_cachedir())</span><br><span class="line"><span class="comment"># &#x27;~/.cache/matplotlib&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>删除该目录</p>
+<pre><code class="highlight shell">rm -rf ~/.cache/matplotlib</code></pre>
 </li>
 <li><p>重新测试</p>
 </li>
 </ol>
 <h4 id="永久修复（Windows）"><a href="#永久修复（Windows）" class="headerlink" title="永久修复（Windows）"></a>永久修复（Windows）</h4><ol>
-<li><p>将字体文件放到Matplotlib文件夹<br>查找Matplotlib文件夹：运行</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line"><span class="built_in">print</span>(matplotlib.get_data_path())</span><br><span class="line"><span class="comment"># &lt;PythonDir&gt;\lib\site-packages\matplotlib\mpl-data</span></span><br></pre></td></tr></table></figure>
-<p>将字体（黑体：<code>SimHei.ttf</code>，Windows自带）复制到<code>...\mpl-data\fonts\ttf\</code>。<br>也可以复制Arial Unicode MS。</p>
+<li><p>安装字体到Windows<br>打开<code>C:\Windows\Fonts</code>，确保拥有<strong>黑体</strong>（<code>SimHei.ttf</code>，Windows自带）或<strong>Arial Unicode MS</strong>（需要自行安装）。</p>
 </li>
-<li><p>修改Matplotlib配置文件<br>打开<code>...\mpl-data\matplotlibrc</code>文件，更新如下配置：</p>
-<figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="attr">font.family</span>: <span class="string">sans-serif</span></span><br><span class="line"><span class="comment"># 将字体名追加在开头</span></span><br><span class="line"><span class="attr">font.sans-serif</span>: <span class="string">SimHei, ...</span></span><br><span class="line"><span class="attr">axes.unicode_minus</span>: <span class="string">False</span></span><br><span class="line"><span class="comment"># 注：黑体没有unicode负号，因此`axes.unicode_minus`必须要设置为`False`</span></span><br></pre></td></tr></table></figure>
+<li><p>创建Matplotlib配置文件<br>查找Matplotlib文件夹：运行</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line"><span class="built_in">print</span>(matplotlib.get_data_path())</span><br><span class="line"><span class="comment"># &lt;PythonDir&gt;\lib\site-packages\matplotlib\mpl-data</span></span><br></pre></td></tr></table></figure>
+
+<p>将<code>matplotlibrc</code>复制到<code>%USERPROFILE%\.matplotlib\</code><sub>3</sub>。</p>
+<div class="note warning"><p>不要修改<code>&lt;PythonDir&gt;\lib\site-packages\matplotlib\mpl-data\matplotlibrc</code>，[1-2]中描述的是错误用法。</p>
+</div>
+</li>
+<li><p>修改Matplotlib配置文件<br>打开<code>%USERPROFILE%\.matplotlib\matplotlibrc</code>文件，更新如下配置：</p>
+<figure class="highlight properties"><figcaption><span>matplotlibrc</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="attr">font.family</span>: <span class="string">sans-serif</span></span><br><span class="line"><span class="comment"># 将字体名追加在开头</span></span><br><span class="line"><span class="attr">font.sans-serif</span>: <span class="string">SimHei, ...</span></span><br><span class="line"><span class="attr">axes.unicode_minus</span>: <span class="string">False</span></span><br><span class="line"><span class="comment"># 注：黑体没有unicode负号，因此`axes.unicode_minus`必须要设置为`False`</span></span><br></pre></td></tr></table></figure>
+
 <p>经测试Arial Unicode MS也是可以用的</p>
-<figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="attr">font.family</span>: <span class="string">sans-serif</span></span><br><span class="line"><span class="attr">font.sans-serif</span>: <span class="string">Arial Unicode MS, ...</span></span><br><span class="line"><span class="attr">axes.unicode_minus</span>: <span class="string">True</span></span><br><span class="line"><span class="comment"># 注：Arial Unicode MS符号全，`axes.unicode_minus`可以设置为`True`</span></span><br></pre></td></tr></table></figure>
-<p><em>注：经测试，<code>font.sans-serif</code>填入的是字体文件内部记录的字体名，而非文件名。</em></p>
+<figure class="highlight properties"><figcaption><span>matplotlibrc</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="attr">font.family</span>: <span class="string">sans-serif</span></span><br><span class="line"><span class="attr">font.sans-serif</span>: <span class="string">Arial Unicode MS, ...</span></span><br><span class="line"><span class="attr">axes.unicode_minus</span>: <span class="string">True</span></span><br><span class="line"><span class="comment"># 注：Arial Unicode MS符号全，`axes.unicode_minus`可以设置为`True`</span></span><br></pre></td></tr></table></figure>
+
+<div class="note info"><p>经测试，<code>font.sans-serif</code>填入的是字体文件内部记录的字体名，而非文件名。</p>
+</div>
 </li>
 <li><p>重新测试</p>
 </li>
@@ -1023,6 +1033,7 @@ mate-screensaver-command -l     # MATE桌面</code></pre>
 <h4 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h4><ol>
 <li><a href="https://blog.csdn.net/Disany/article/details/106003277" target="_blank" rel="noopener">Python matplotlib对中文的支持（Font family [‘sans-serif‘] not found.Falling back to DejaVu Sans）</a>；</li>
 <li><a href="https://cloud.tencent.com/developer/article/1681381" target="_blank" rel="noopener">matplotlib中文乱码的两种解决方案</a>；</li>
+<li><a href="https://matplotlib.org/stable/users/explain/customizing.html#the-matplotlibrc-file" target="_blank" rel="noopener">The <code>matplotlibrc</code> file — Matplotlib documentation</a>；</li>
 </ol>
 ]]></content>
       <categories>
@@ -1778,6 +1789,20 @@ mate-screensaver-command -l     # MATE桌面</code></pre>
       </tags>
   </entry>
   <entry>
+    <title>Ubuntu清理临时文件</title>
+    <url>/posts/2025/06/29/Ubuntu%E6%B8%85%E7%90%86%E4%B8%B4%E6%97%B6%E6%96%87%E4%BB%B6/</url>
+    <content><![CDATA[<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 系统清理</span></span><br><span class="line"><span class="built_in">sudo</span> apt clean</span><br><span class="line"><span class="built_in">sudo</span> apt autoclean</span><br><span class="line"><span class="built_in">sudo</span> apt autoremove -y</span><br><span class="line"><span class="comment"># 清理包列表缓存</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">rm</span> -rf /var/lib/apt/lists/*</span><br><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"></span><br><span class="line"><span class="comment"># 清理缓存和临时文件</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">rm</span> -rf /var/cache/* /var/tmp/* /tmp/*</span><br><span class="line"><span class="built_in">rm</span> -rf ~/.cache/* ~/.thumbnails/*</span><br><span class="line"></span><br><span class="line"><span class="comment"># 清理日志</span></span><br><span class="line"><span class="built_in">sudo</span> journalctl --vacuum-time=7d</span><br><span class="line"><span class="built_in">sudo</span> find /var/log -name <span class="string">&quot;*.gz&quot;</span> -delete</span><br><span class="line"><span class="built_in">sudo</span> find /var/log -name <span class="string">&quot;*.old&quot;</span> -delete</span><br><span class="line"></span><br><span class="line"><span class="comment"># 编辑器临时文件</span></span><br><span class="line">find ~ -name <span class="string">&quot;*~&quot;</span> -delete</span><br><span class="line">find ~ -name <span class="string">&quot;.#*&quot;</span> -delete</span><br><span class="line">find ~ -name <span class="string">&quot;#*#&quot;</span> -delete</span><br><span class="line"><span class="comment"># vim交换文件</span></span><br><span class="line">find ~ -name <span class="string">&quot;*.swp&quot;</span> -delete</span><br><span class="line">find ~ -name <span class="string">&quot;*.swo&quot;</span> -delete</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Linux</category>
+        <category>Ubuntu</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+        <tag>Ubuntu</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Ubuntu默认语言设为中文</title>
     <url>/posts/2025/06/11/Ubuntu%E9%BB%98%E8%AE%A4%E8%AF%AD%E8%A8%80%E8%AE%BE%E4%B8%BA%E4%B8%AD%E6%96%87/</url>
     <content><![CDATA[<p>运行：</p>
@@ -1983,7 +2008,7 @@ mate-screensaver-command -l     # MATE桌面</code></pre>
 <p>因此，应当提前导入PySide6，再开启消息循环，以绕过IPython的自动选择机制：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> PySide6.QtWidgets <span class="keyword">import</span> *</span><br><span class="line">%gui qt</span><br></pre></td></tr></table></figure>
 
-<div class="note danger"><p>这里必须是<code>PySide6.QtWidgets</code>，因为<code>QApplication</code>类在<code>QtWidgets</code>模块中定义，而IPython的自动选择机制会依赖于<code>QApplication</code>。</p>
+<div class="note warning"><p>这里必须是<code>PySide6.QtWidgets</code>，因为<code>QApplication</code>类在<code>QtWidgets</code>模块中定义，而IPython的自动选择机制会依赖于<code>QApplication</code>。</p>
 </div>
 
 <p><code>%gui</code>相关代码可以在<code>IPython.terminal.pt_inputhooks</code>库中找到。</p>
@@ -2090,99 +2115,13 @@ xz -zvk9ef -T 0 some-dir.tar</code></pre>
         <category>Windows</category>
         <category>备份</category>
         <category>PowerShell</category>
+        <category>VHDX</category>
       </categories>
       <tags>
         <tag>Windows</tag>
         <tag>PowerShell</tag>
         <tag>备份</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>将CppReference离线包通过Docker运行NGINX部署到本地</title>
-    <url>/posts/2025/06/17/%E5%B0%86CppReference%E7%A6%BB%E7%BA%BF%E5%8C%85%E9%80%9A%E8%BF%87Docker%E9%83%A8%E7%BD%B2%E5%88%B0%E6%9C%AC%E5%9C%B0/</url>
-    <content><![CDATA[<h3 id="一、下载离线包"><a href="#一、下载离线包" class="headerlink" title="一、下载离线包"></a>一、下载离线包</h3><p>下载地址：<a href="https://zh.cppreference.com/" target="_blank" rel="noopener">cppreference.com</a></p>
-<p>将离线包<code>html-zh-book-20221231.zip</code>下载到<code>~/site/mirror.cppreference.com/</code>，并解压出<code>html-zh-book-20221231/</code>。</p>
-<h3 id="二、写Nginx配置文件"><a href="#二、写Nginx配置文件" class="headerlink" title="二、写Nginx配置文件"></a>二、写Nginx配置文件</h3><p>在<code>~/site/mirror.cppreference.com/default.conf</code>写入：</p>
-<figure class="highlight nginx"><figcaption><span>default.conf</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span>       <span class="number">80</span>;</span><br><span class="line">    <span class="attribute">listen</span>  [::]:<span class="number">80</span>;</span><br><span class="line">    <span class="attribute">server_name</span>  localhost;</span><br><span class="line"></span><br><span class="line">    <span class="section">location</span> = / &#123;</span><br><span class="line">        <span class="attribute">return</span> <span class="number">302</span> http://<span class="variable">$http_host</span>/reference/zh/index.html;</span><br><span class="line">        <span class="comment"># DO NOT USE THIS!!!</span></span><br><span class="line">        <span class="comment"># return 302 /reference/zh/index.html;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="section">location</span> / &#123;</span><br><span class="line">        <span class="comment"># 这是NGINX容器中网站的挂载路径，不是主机的路径</span></span><br><span class="line">        <span class="attribute">root</span> /usr/share/nginx/html/html-book-<span class="number">20221231</span>;</span><br><span class="line">        <span class="attribute">try_files</span> <span class="variable">$uri</span> <span class="variable">$uri</span>/ =<span class="number">404</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">#error_page  404              /404.html;</span></span><br><span class="line"></span><br><span class="line">    <span class="attribute">error_page</span>   <span class="number">500</span> <span class="number">502</span> <span class="number">503</span> <span class="number">504</span>  /50x.html;</span><br><span class="line">    <span class="section">location</span> = /50x.html &#123;</span><br><span class="line">        <span class="attribute">root</span>   /usr/share/nginx/html;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<div class="note warning"><p>由于<code>index.html</code>不在根目录，所以需要增加跳转：</p>
-<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="section">location</span> = / &#123;</span><br><span class="line">    <span class="attribute">return</span> <span class="number">302</span> http://<span class="variable">$http_host</span>/reference/zh/index.html;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>上述代码的作用是在访问网站根目录时，即匹配到<code>/</code>时，跳转到实际地址。如果写的不是<code>location = /</code>，可能出现循环跳转的问题。</p>
-<p>不使用相对地址的原因是：根据NGINX的配置文件，自动生成的地址端口是80而非docker映射的端口60080，因此需要使用客户端请求头里的Host字段来确定地址。可以运行</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ curl -I http://localhost:60080/</span><br><span class="line">HTTP/1.1 302 Moved Temporarily</span><br><span class="line">Server: nginx/1.28.0</span><br><span class="line">Date: Tue, 17 Jun 2025 17:40:16 GMT</span><br><span class="line">Content-Type: text/html</span><br><span class="line">Content-Length: 145</span><br><span class="line">Connection: keep-alive</span><br><span class="line">Location: http://localhost:60080/reference/zh/index.html</span><br></pre></td></tr></table></figure>
-
-<p>来查看跳转地址。</p>
-</div>
-
-<h3 id="三、写Docker-Compose文件并启动容器"><a href="#三、写Docker-Compose文件并启动容器" class="headerlink" title="三、写Docker Compose文件并启动容器"></a>三、写Docker Compose文件并启动容器</h3><p>在<code>~/site/mirror.cppreference.com/docker-compose.yml</code>写入：</p>
-<figure class="highlight yaml"><figcaption><span>docker-compose.yml</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">nginx:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">&quot;nginx:stable&quot;</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;60080:80&quot;</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">~/site/mirror.cppreference.com/html-book-20221231:/usr/share/nginx/html/html-book-20221231:ro</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">~/site/mirror.cppreference.com/default.conf:/etc/nginx/conf.d/default.conf:ro</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br></pre></td></tr></table></figure>
-
-<p>该文件中定义了主机访问的端口号、网站文件和配置文件的挂载地址。</p>
-<p>运行</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker compose up -d</span><br></pre></td></tr></table></figure>
-
-<p>启动容器。</p>
-<h3 id="四、启动容器"><a href="#四、启动容器" class="headerlink" title="四、启动容器"></a>四、启动容器</h3><p>打开<a href="http://localhost:60080/" target="_blank" rel="noopener"><code>localhost:60080</code></a>观察是否正常运行。</p>
-]]></content>
-      <categories>
-        <category>编程</category>
-        <category>C</category>
-        <category>C++</category>
-        <category>NGINX</category>
-      </categories>
-      <tags>
-        <tag>C</tag>
-        <tag>C++</tag>
-        <tag>NGINX</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>常用GCC编译选项</title>
-    <url>/posts/2023/04/11/%E5%B8%B8%E7%94%A8GCC%E7%BC%96%E8%AF%91%E9%80%89%E9%A1%B9/</url>
-    <content><![CDATA[<h3 id="指定输出文件名"><a href="#指定输出文件名" class="headerlink" title="指定输出文件名"></a>指定输出文件名</h3><ul>
-<li>-o <em>file</em>：编译完成的输出到<em>file</em>，否则会使用非常烂的默认名字（比如a.exe）。</li>
-</ul>
-<span id="more"></span>
-
-<h3 id="指定宏定义"><a href="#指定宏定义" class="headerlink" title="指定宏定义"></a>指定宏定义</h3><p>以下信息与手册上的写法略有出入<sup>[5]</sup>，但是手册上的写法有时会报错。</p>
-<ul>
-<li>-D<em>name</em>：等效于<code>#define name</code>。</li>
-<li>-D<em>name</em>&#x3D;<em>definition</em>：等效于<code>#define name definition</code>。</li>
-</ul>
-<p>这样指定的宏定义在引用任何头文件前即存在。</p>
-<h3 id="包含头文件"><a href="#包含头文件" class="headerlink" title="包含头文件"></a>包含头文件</h3><ul>
-<li>-I<em>dir</em>：将目录<em>dir</em>添加到搜索头文件的目录列表中<sup>[2]</sup>。</li>
-</ul>
-<div class="note info"><h4 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h4><p>此处有坑点，某些老版本的GCC不支持<code>-I./</code>，会找不到文件，只能用<code>-I.</code></p>
-</div>
-
-<h3 id="链接库"><a href="#链接库" class="headerlink" title="链接库"></a>链接库</h3><ul>
-<li>-L<em>dir</em>：将目录<em>dir</em>添加到链接库要搜索的目录列表中<sup>[2]</sup>。</li>
-<li>-l<em>library</em>：链接时搜索名为<em>library</em>的库<sup>[3]</sup>。对应的库文件名为lib<em>library</em>.a或lib<em>library</em>.so（Linux）。<br>注：-l选项要放在源文件列表后，同时依赖其他库的库要放在顺序靠前的位置，否则会出错。<br>比如，使用pthread库时要增加-lpthread参数，以链接libpthread.a。</li>
-</ul>
-<h3 id="查看帮助"><a href="#查看帮助" class="headerlink" title="查看帮助"></a>查看帮助</h3><p>运行</p>
-<pre><code class="highlight shell">gcc --help
-g++ --help</code></pre>
-
-<p>打印的信息极少，因此还是需要查阅手册。</p>
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ol>
-<li><a href="https://gcc.gnu.org/onlinedocs/gcc/Option-Summary.html" target="_blank" rel="noopener">3.1 Option Summary (Using the GNU Compiler Collection (GCC))</a>；</li>
-<li><a href="https://gcc.gnu.org/onlinedocs/gcc/Directory-Options.html" target="_blank" rel="noopener">3.16 Options for Directory Search (Using the GNU Compiler Collection (GCC))</a>；</li>
-<li><a href="https://gcc.gnu.org/onlinedocs/gcc/Link-Options.html" target="_blank" rel="noopener">3.15 Options for Linking (Using the GNU Compiler Collection (GCC))</a>；</li>
-<li><a href="https://blog.csdn.net/surgewong/article/details/39236707" target="_blank" rel="noopener">gcc&#x2F;g++ 链接库的编译与链接 - CSDN博客</a>；</li>
-<li><a href="https://gcc.gnu.org/onlinedocs/gcc/Preprocessor-Options.html" target="_blank" rel="noopener">3.13 Options Controlling the Preprocessor (Using the GNU Compiler Collection (GCC))</a>；</li>
-</ol>
-]]></content>
-      <categories>
-        <category>编程</category>
-        <category>C</category>
-        <category>C++</category>
-      </categories>
-      <tags>
-        <tag>C</tag>
-        <tag>C++</tag>
-        <tag>GCC</tag>
+        <tag>VHDX</tag>
       </tags>
   </entry>
   <entry>
@@ -2265,6 +2204,94 @@ g++ --help</code></pre>
         <tag>Hexo</tag>
         <tag>NexT</tag>
         <tag>Blog</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>将cppreference离线包通过Docker运行NGINX部署到本地</title>
+    <url>/posts/2025/06/17/%E5%B0%86cppreference%E7%A6%BB%E7%BA%BF%E5%8C%85%E9%80%9A%E8%BF%87Docker%E8%BF%90%E8%A1%8CNGINX%E9%83%A8%E7%BD%B2%E5%88%B0%E6%9C%AC%E5%9C%B0/</url>
+    <content><![CDATA[<h3 id="一、下载离线包"><a href="#一、下载离线包" class="headerlink" title="一、下载离线包"></a>一、下载离线包</h3><p>下载地址：<a href="https://zh.cppreference.com/w/Cppreference:Archives" target="_blank" rel="noopener">cppreference.com</a>／<a href="https://github.com/myfreeer/cppreference2mshelp/releases" target="_blank" rel="noopener">非官方版本</a></p>
+<p>将离线包<code>html-zh-book-20221231.zip</code>下载到<code>~/site/mirror.cppreference.com/</code>，并解压出<code>html-zh-book-20221231/</code>。</p>
+<h3 id="二、写Nginx配置文件"><a href="#二、写Nginx配置文件" class="headerlink" title="二、写Nginx配置文件"></a>二、写Nginx配置文件</h3><p>在<code>~/site/mirror.cppreference.com/default.conf</code>写入：</p>
+<figure class="highlight nginx"><figcaption><span>default.conf</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span>       <span class="number">80</span>;</span><br><span class="line">    <span class="attribute">listen</span>  [::]:<span class="number">80</span>;</span><br><span class="line">    <span class="attribute">server_name</span>  localhost;</span><br><span class="line"></span><br><span class="line">    <span class="section">location</span> = / &#123;</span><br><span class="line">        <span class="attribute">return</span> <span class="number">302</span> http://<span class="variable">$http_host</span>/reference/zh/index.html;</span><br><span class="line">        <span class="comment"># DO NOT USE THIS!!!</span></span><br><span class="line">        <span class="comment"># return 302 /reference/zh/index.html;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="section">location</span> / &#123;</span><br><span class="line">        <span class="comment"># 这是NGINX容器中网站的挂载路径，不是主机的路径</span></span><br><span class="line">        <span class="attribute">root</span> /usr/share/nginx/html/html-book-<span class="number">20221231</span>;</span><br><span class="line">        <span class="attribute">try_files</span> <span class="variable">$uri</span> <span class="variable">$uri</span>/ =<span class="number">404</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">#error_page  404              /404.html;</span></span><br><span class="line"></span><br><span class="line">    <span class="attribute">error_page</span>   <span class="number">500</span> <span class="number">502</span> <span class="number">503</span> <span class="number">504</span>  /50x.html;</span><br><span class="line">    <span class="section">location</span> = /50x.html &#123;</span><br><span class="line">        <span class="attribute">root</span>   /usr/share/nginx/html;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<div class="note warning"><p>由于<code>index.html</code>不在根目录，所以需要增加跳转：</p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="section">location</span> = / &#123;</span><br><span class="line">    <span class="attribute">return</span> <span class="number">302</span> http://<span class="variable">$http_host</span>/reference/zh/index.html;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述代码的作用是在访问网站根目录时，即匹配到<code>/</code>时，跳转到实际地址。如果写的不是<code>location = /</code>，可能出现循环跳转的问题。</p>
+<p>不使用相对地址的原因是：根据NGINX的配置文件，自动生成的地址端口是80而非docker映射的端口60080，因此需要使用客户端请求头里的Host字段来确定地址。可以运行</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ curl -I http://localhost:60080/</span><br><span class="line">HTTP/1.1 302 Moved Temporarily</span><br><span class="line">Server: nginx/1.28.0</span><br><span class="line">Date: Tue, 17 Jun 2025 17:40:16 GMT</span><br><span class="line">Content-Type: text/html</span><br><span class="line">Content-Length: 145</span><br><span class="line">Connection: keep-alive</span><br><span class="line">Location: http://localhost:60080/reference/zh/index.html</span><br></pre></td></tr></table></figure>
+
+<p>来查看跳转地址。</p>
+</div>
+
+<h3 id="三、写Docker-Compose文件并启动容器"><a href="#三、写Docker-Compose文件并启动容器" class="headerlink" title="三、写Docker Compose文件并启动容器"></a>三、写Docker Compose文件并启动容器</h3><p>在<code>~/site/mirror.cppreference.com/docker-compose.yml</code>写入：</p>
+<figure class="highlight yaml"><figcaption><span>docker-compose.yml</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">nginx:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">&quot;nginx:stable&quot;</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;60080:80&quot;</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">~/site/mirror.cppreference.com/html-book-20221231:/usr/share/nginx/html/html-book-20221231:ro</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">~/site/mirror.cppreference.com/default.conf:/etc/nginx/conf.d/default.conf:ro</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br></pre></td></tr></table></figure>
+
+<p>该文件中定义了主机访问的端口号、网站文件和配置文件的挂载地址。</p>
+<p>运行</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker compose up -d</span><br></pre></td></tr></table></figure>
+
+<p>启动容器。</p>
+<h3 id="四、启动容器"><a href="#四、启动容器" class="headerlink" title="四、启动容器"></a>四、启动容器</h3><p>打开<a href="http://localhost:60080/" target="_blank" rel="noopener"><code>localhost:60080</code></a>观察是否正常运行。</p>
+]]></content>
+      <categories>
+        <category>编程</category>
+        <category>C</category>
+        <category>C++</category>
+        <category>NGINX</category>
+      </categories>
+      <tags>
+        <tag>C</tag>
+        <tag>C++</tag>
+        <tag>NGINX</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>常用GCC编译选项</title>
+    <url>/posts/2023/04/11/%E5%B8%B8%E7%94%A8GCC%E7%BC%96%E8%AF%91%E9%80%89%E9%A1%B9/</url>
+    <content><![CDATA[<h3 id="指定输出文件名"><a href="#指定输出文件名" class="headerlink" title="指定输出文件名"></a>指定输出文件名</h3><ul>
+<li>-o <em>file</em>：编译完成的输出到<em>file</em>，否则会使用非常烂的默认名字（比如a.exe）。</li>
+</ul>
+<span id="more"></span>
+
+<h3 id="指定宏定义"><a href="#指定宏定义" class="headerlink" title="指定宏定义"></a>指定宏定义</h3><p>以下信息与手册上的写法略有出入<sup>[5]</sup>，但是手册上的写法有时会报错。</p>
+<ul>
+<li>-D<em>name</em>：等效于<code>#define name</code>。</li>
+<li>-D<em>name</em>&#x3D;<em>definition</em>：等效于<code>#define name definition</code>。</li>
+</ul>
+<p>这样指定的宏定义在引用任何头文件前即存在。</p>
+<h3 id="包含头文件"><a href="#包含头文件" class="headerlink" title="包含头文件"></a>包含头文件</h3><ul>
+<li>-I<em>dir</em>：将目录<em>dir</em>添加到搜索头文件的目录列表中<sup>[2]</sup>。</li>
+</ul>
+<div class="note info"><h4 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h4><p>此处有坑点，某些老版本的GCC不支持<code>-I./</code>，会找不到文件，只能用<code>-I.</code></p>
+</div>
+
+<h3 id="链接库"><a href="#链接库" class="headerlink" title="链接库"></a>链接库</h3><ul>
+<li>-L<em>dir</em>：将目录<em>dir</em>添加到链接库要搜索的目录列表中<sup>[2]</sup>。</li>
+<li>-l<em>library</em>：链接时搜索名为<em>library</em>的库<sup>[3]</sup>。对应的库文件名为lib<em>library</em>.a或lib<em>library</em>.so（Linux）。<br>注：-l选项要放在源文件列表后，同时依赖其他库的库要放在顺序靠前的位置，否则会出错。<br>比如，使用pthread库时要增加-lpthread参数，以链接libpthread.a。</li>
+</ul>
+<h3 id="查看帮助"><a href="#查看帮助" class="headerlink" title="查看帮助"></a>查看帮助</h3><p>运行</p>
+<pre><code class="highlight shell">gcc --help
+g++ --help</code></pre>
+
+<p>打印的信息极少，因此还是需要查阅手册。</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ol>
+<li><a href="https://gcc.gnu.org/onlinedocs/gcc/Option-Summary.html" target="_blank" rel="noopener">3.1 Option Summary (Using the GNU Compiler Collection (GCC))</a>；</li>
+<li><a href="https://gcc.gnu.org/onlinedocs/gcc/Directory-Options.html" target="_blank" rel="noopener">3.16 Options for Directory Search (Using the GNU Compiler Collection (GCC))</a>；</li>
+<li><a href="https://gcc.gnu.org/onlinedocs/gcc/Link-Options.html" target="_blank" rel="noopener">3.15 Options for Linking (Using the GNU Compiler Collection (GCC))</a>；</li>
+<li><a href="https://blog.csdn.net/surgewong/article/details/39236707" target="_blank" rel="noopener">gcc&#x2F;g++ 链接库的编译与链接 - CSDN博客</a>；</li>
+<li><a href="https://gcc.gnu.org/onlinedocs/gcc/Preprocessor-Options.html" target="_blank" rel="noopener">3.13 Options Controlling the Preprocessor (Using the GNU Compiler Collection (GCC))</a>；</li>
+</ol>
+]]></content>
+      <categories>
+        <category>编程</category>
+        <category>C</category>
+        <category>C++</category>
+      </categories>
+      <tags>
+        <tag>C</tag>
+        <tag>C++</tag>
+        <tag>GCC</tag>
       </tags>
   </entry>
   <entry>
@@ -2441,6 +2468,27 @@ Linux version 5.4.0-167-generic (buildd@lcy02-amd64-010) (gcc version 9.4.0 (Ubu
       </tags>
   </entry>
   <entry>
+    <title>紧凑VHDX镜像的方法</title>
+    <url>/posts/2025/06/29/%E7%B4%A7%E5%87%91VHDX%E9%95%9C%E5%83%8F%E7%9A%84%E6%96%B9%E6%B3%95/</url>
+    <content><![CDATA[<h4 id="方法一：使用Hyper-V的PowerShell命令"><a href="#方法一：使用Hyper-V的PowerShell命令" class="headerlink" title="方法一：使用Hyper-V的PowerShell命令"></a>方法一：使用Hyper-V的PowerShell命令</h4><figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="built_in">PS</span> C:\&gt; <span class="built_in">Optimize-VHD</span> <span class="literal">-Path</span> D:\dynamic.vhdx</span><br><span class="line"><span class="built_in">PS</span> C:\&gt; <span class="built_in">Optimize-VHD</span> <span class="literal">-Path</span> D:\dynamic.vhdx <span class="literal">-Mode</span> Full</span><br><span class="line"><span class="built_in">PS</span> C:\&gt; <span class="built_in">Optimize-VHD</span> <span class="literal">-Path</span> D:\dynamic.vhdx <span class="literal">-Mode</span> Quick</span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<h4 id="方法二：使用Diskpart工具"><a href="#方法二：使用Diskpart工具" class="headerlink" title="方法二：使用Diskpart工具"></a>方法二：使用Diskpart工具</h4><p>管理员身份运行CMD</p>
+<figure class="highlight cmd"><table><tr><td class="code"><pre><span class="line"># 停止WSL</span><br><span class="line">wsl --shutdown</span><br><span class="line"># 启动diskpart</span><br><span class="line">diskpart</span><br><span class="line"># 选择vhdx文件（替换为你的实际路径）</span><br><span class="line">select vdisk file=&quot;D:\dynamic.vhdx&quot;</span><br><span class="line"># 附加磁盘</span><br><span class="line">attach vdisk readonly</span><br><span class="line"># 压缩磁盘</span><br><span class="line"><span class="built_in">compact</span> vdisk</span><br><span class="line"># 分离磁盘</span><br><span class="line">detach vdisk</span><br><span class="line"># 退出diskpart</span><br><span class="line"><span class="keyword">exit</span></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Windows</category>
+        <category>PowerShell</category>
+        <category>VHDX</category>
+      </categories>
+      <tags>
+        <tag>Windows</tag>
+        <tag>PowerShell</tag>
+        <tag>VHDX</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>设置用于VS Code的环境变量</title>
     <url>/posts/2025/06/11/%E8%AE%BE%E7%BD%AE%E7%94%A8%E4%BA%8EVS%20Code%E7%9A%84%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/</url>
     <content><![CDATA[<h4 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h4><p>对于Windows，可以在配置文件<code>settings.json</code>中加入：</p>
@@ -2461,6 +2509,32 @@ Linux version 5.4.0-167-generic (buildd@lcy02-amd64-010) (gcc version 9.4.0 (Ubu
       </categories>
       <tags>
         <tag>VSCode</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>适用于Cursor的兼容性设置</title>
+    <url>/posts/2025/07/22/%E9%80%82%E7%94%A8%E4%BA%8ECursor%E7%9A%84%E5%85%BC%E5%AE%B9%E6%80%A7%E8%AE%BE%E7%BD%AE/</url>
+    <content><![CDATA[<h4 id="假定"><a href="#假定" class="headerlink" title="假定"></a>假定</h4><p>环境中VS Code的优先级高于Cursor。</p>
+<h4 id="环境变量设置"><a href="#环境变量设置" class="headerlink" title="环境变量设置"></a>环境变量设置</h4><p>将VS Code和Cursor的运行路径放在环境变量中，其中VS Code的优先级高于Cursor。</p>
+<p>在Cursor的<code>settings.json</code>中加入：</p>
+<figure class="highlight json"><figcaption><span>settings.json</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;terminal.integrated.env.windows&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;PATH&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&lt;path-of-cursor&gt;;$&#123;env:Path&#125;&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>这样<code>code</code>命令在Cursor内是打开Cursor，其他时候都是打开VS Code。</p>
+<h4 id="Git设置"><a href="#Git设置" class="headerlink" title="Git设置"></a>Git设置</h4><p>在上一步的基础上，只需要将Git的默认编辑器和比较编辑器都设为<code>code</code>即可打开正在使用的编辑器。打开主目录下的<code>.gitconfig</code>，加入：</p>
+<figure class="highlight properties"><figcaption><span>.gitconfig</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="attr">[core]</span></span><br><span class="line">	<span class="attr">editor</span> = <span class="string">code.cmd --wait</span></span><br><span class="line"><span class="attr">[diff]</span></span><br><span class="line">	<span class="attr">tool</span> = <span class="string">vscode</span></span><br><span class="line"><span class="attr">[difftool</span> <span class="string">&quot;vscode&quot;]</span></span><br><span class="line">	<span class="attr">cmd</span> = <span class="string">code.cmd --wait --diff $LOCAL $REMOTE</span></span><br></pre></td></tr></table></figure>
+
+<p>这样Git就不会调用其他编辑器了。</p>
+<div class="note primary"><p>Windows上这里有个坑。当命令设置为<code>code</code>时，Git会优先找<code>code</code>，之后再找<code>code.cmd</code>，这与命令行的行为不一样。即使Cursor的路径比VS Code先出现，但是Cursor没有提供<code>code</code>时，Git会自动打开找到的第一个、即VS Code的<code>code</code>，而非路径更早出现的、但是名为<code>code.cmd</code>的程序。</p>
+</div>
+]]></content>
+      <categories>
+        <category>VSCode</category>
+        <category>Cursor</category>
+      </categories>
+      <tags>
+        <tag>Windows</tag>
+        <tag>VSCode</tag>
+        <tag>Cursor</tag>
       </tags>
   </entry>
   <entry>
